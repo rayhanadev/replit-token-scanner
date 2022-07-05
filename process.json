@@ -1,0 +1,15 @@
+{
+	"apps": [
+		{
+			"name": "cronjob",
+			"script": "./scanner/index.js",
+			"watch": true,
+		},
+		{
+			"name": "website",
+			"script": "./website/server.js",
+			"instances": 4,
+			"exec_mode": "cluster"
+		}
+	]
+}
