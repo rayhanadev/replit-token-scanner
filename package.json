@@ -1,0 +1,21 @@
+{
+  "type": "module",
+  "name": "replit-token-scanner",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@ladjs/graceful": "^3.0.1",
+    "bree": "^9.1.1",
+    "cabin": "^9.1.2",
+    "crosis4furrets": "^1.0.0",
+    "lightfetch-node": "^1.1.1",
+    "node-fetch": "3.x"
+  }
+}
