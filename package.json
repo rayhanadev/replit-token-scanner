@@ -5,9 +5,7 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"start": "pm2 delete process.json 2> /dev/null || true && pm2 start process.json",
-		"cron": "node scanner/index.js",
-		"website": "node website/server.js",
+		"start": "node scanner/index.js",
 		"lint": "eslint . --config ./eslint.config.json",
 		"lint:fix": "eslint . --config ./eslint.config.json --fix",
 		"format": "prettier --check . --config ./prettier.config.json",
@@ -17,16 +15,10 @@
 	"author": "Ray Arayilakath <rayhanadev@protonmail.com> (https://www.furret.codes)",
 	"license": "MIT",
 	"dependencies": {
-		"@koa/router": "^11.0.1",
 		"@ladjs/graceful": "^3.0.1",
 		"bree": "^9.1.1",
 		"cabin": "^9.1.2",
 		"crosis4furrets": "^1.0.0",
-		"koa": "^2.13.4",
-		"koa-compress": "^5.1.0",
-		"koa-mount": "^4.0.0",
-		"koa-send": "^5.0.1",
-		"koa-static": "^5.0.0",
 		"lightfetch-node": "^1.1.1"
 	},
 	"devDependencies": {

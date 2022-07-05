@@ -10,7 +10,7 @@ a change.
 
 Please note the following:
 
--   We have a [Code of Conduct](https://github.com/rayhanadev/Replit-Token-Scanner/blob/main/CODE_OF_CONDUCT.md),
+-   We have a [Code of Conduct](https://github.com/rayhanadev/Replit-Token-Scanners/blob/main/CODE_OF_CONDUCT.md),
     please follow it in all your interactions with the project.
 -   We use `Eslint` and `Prettier` to lint and format our code respectively. We have
     included scripts and configuration files to help you maintain similar code:

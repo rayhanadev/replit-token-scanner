@@ -3,7 +3,7 @@ import Cabin from 'cabin';
 import Graceful from '@ladjs/graceful';
 
 const bree = new Bree({
-	root: `${process.cwd()}/scanner/jobs/`
+	root: `${process.cwd()}/scanner/jobs/`,
 	logger: new Cabin(),
 	jobs: [
 		{
