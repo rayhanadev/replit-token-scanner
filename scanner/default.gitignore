@@ -1,0 +1,23 @@
+# Source Control Managers
+.git
+.svn
+.hg
+CVS
+
+# Node.js
+node_modules
+
+# Python
+venv
+__pycache__
+
+# C-Plus-Plus
+.ccls-cache
+
+# Java
+java
+
+# Replit
+.cache
+.config
+.upm

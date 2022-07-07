@@ -1,6 +1,5 @@
 import Bree from 'bree';
 import Cabin from 'cabin';
-import Graceful from '@ladjs/graceful';
 
 const bree = new Bree({
 	root: `${process.cwd()}/scanner/jobs/`,
@@ -8,12 +7,10 @@ const bree = new Bree({
 	jobs: [
 		{
 			name: 'scan',
+			timeout: false,
 			interval: '1m',
 		},
 	],
 });
-
-const graceful = new Graceful({ brees: [bree] });
-graceful.listen();
 
 await bree.start();

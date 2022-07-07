@@ -15,11 +15,13 @@
 	"author": "Ray Arayilakath <rayhanadev@protonmail.com> (https://www.furret.codes)",
 	"license": "MIT",
 	"dependencies": {
-		"@ladjs/graceful": "^3.0.1",
+		"boxen": "^7.0.0",
 		"bree": "^9.1.1",
 		"cabin": "^9.1.2",
-		"crosis4furrets": "^1.0.0",
-		"lightfetch-node": "^1.1.1"
+		"conf": "^10.1.2",
+		"crosis4furrets": "^1.1.0",
+		"lightfetch-node": "^1.1.1",
+		"minimist": "^1.2.6"
 	},
 	"devDependencies": {
 		"eslint": "^8.19.0",

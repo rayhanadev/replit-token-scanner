@@ -1,4 +1,15 @@
+import { readFile } from 'node:fs/promises';
 import { lightfetch } from 'lightfetch-node';
+
+export const ignore = await readFile(
+	process.cwd() + '/scanner/default.gitignore',
+	{ encoding: 'utf-8' },
+);
+
+export const tokenMatchers = [
+	// Discord Bot Token
+	/[M-Z][A-Za-z\d]{23}\.[\w-]{6}\.[\w-]{27}/g,
+];
 
 export const CURRENT_USER = `
 	query CurrentUser {
@@ -12,7 +23,7 @@ export const RECENTLY_PUBLISHED_REPLS = `
 	query RecentlyPublishedRepls($options: ReplPostsQueryOptions) {
 		replPosts(options: $options) {
 			items {
-				repl { id, title	}
+				repl { id, title, url	}
 			}
 			pageInfo{ nextCursor }
 		}
