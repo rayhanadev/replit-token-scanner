@@ -67,7 +67,9 @@ await Promise.all(completion);
 completion.forEach(({ pass, elapsed, tokens, repl }) => {
 	try {
 		if (!pass) tokens.forEach((token) => disableToken(token, repl));
-	} catch(error) { errorLog(error); };
+	} catch (error) {
+		errorLog(error);
+	}
 
 	console.log(
 		boxen(

@@ -19,13 +19,13 @@ const completion = [];
 
 for (let i = 0; i < files.length; i++) {
 	const testPromise = async () => {
-		try {		
+		try {
 			const path = files[i];
 			const file = await client.read(path, 'utf8');
-	
+
 			let type = '';
 			let token = '';
-	
+
 			const matchers = Object.values(tokenMatchers);
 			const doesMatch = matchers.some((matcher) => {
 				const test = matcher.exec(file);
@@ -34,15 +34,17 @@ for (let i = 0; i < files.length; i++) {
 						(key) => tokenMatchers[key] === matcher,
 					);
 					token = test[0];
-	
+
 					return true;
 				}
 				return false;
 			});
-	
+
 			if (doesMatch) return { type, token };
 			else return false;
-		} catch(error) { errorLog(error); };
+		} catch (error) {
+			errorLog(error);
+		}
 	};
 
 	completion.push(testPromise());

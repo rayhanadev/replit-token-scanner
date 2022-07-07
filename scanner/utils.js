@@ -2,12 +2,16 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { Buffer } from 'node:buffer';
 import { lightfetch } from 'lightfetch-node';
 import { Octokit } from '@octokit/rest';
-import { format } from 'date-fns'
+import { format } from 'date-fns';
 
-export const errorLog = (error) => await writeFile(process.cwd() + '/scanner-error.logs', `
+export const errorLog = async (error) =>
+	await writeFile(
+		process.cwd() + '/scanner-error.logs',
+		`
 ${format(new Date(), "MM/dd/yy 'at' h':'m':'s UTC-0")}
 ${error.message}
-${error.stack ? error.stack : ''}`);
+${error.stack ? error.stack : ''}`,
+	);
 
 export const ignore = await readFile(
 	process.cwd() + '/scanner/default.gitignore',
