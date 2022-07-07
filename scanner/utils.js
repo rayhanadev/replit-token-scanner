@@ -1,15 +1,50 @@
 import { readFile } from 'node:fs/promises';
+import { Buffer } from 'node:buffer';
 import { lightfetch } from 'lightfetch-node';
+import { Octokit } from '@octokit/rest';
 
 export const ignore = await readFile(
 	process.cwd() + '/scanner/default.gitignore',
 	{ encoding: 'utf-8' },
 );
 
-export const tokenMatchers = [
-	// Discord Bot Token
-	/[M-Z][A-Za-z\d]{23}\.[\w-]{6}\.[\w-]{27}/g,
-];
+export const tokenMatchers = {
+	Discord: /[M-Z][A-Za-z\d]{23}\.[\w-]{6}\.[\w-]{27}/g,
+};
+
+const octokit = new Octokit({
+	auth: process.env.GITHUB_TOKEN,
+});
+
+const atob = (str) => Buffer.from(str).toString('base64');
+const message = (token, repl) => {
+	return `Heya! Replit's Token Scanner found your token in a published Repl!
+
+Type: ${token.type}
+Location: https://replit.com${repl.url}
+Token: ${token.token}
+
+Your token has been revoked at your service because Github scans these
+repositories for secrets.
+
+Please keep your token safe! You can do this by using Replit's secrets tab. To learn
+how to use it, read: https://docs.replit.com/tutorials/storing-secrets-and-history`;
+};
+
+const { GITHUB_OWNER, GITHUB_REPO } = process.env;
+
+export const disableToken = async (token, repl) => {
+	const res = await octokit.repos.createOrUpdateFileContents({
+		owner: GITHUB_OWNER,
+		repo: GITHUB_REPO,
+		path: `${atob(repl.id)}.txt`,
+		message: `chore: add token from ${repl.id}`,
+		content: atob(message(token, repl)),
+	});
+
+	if (res && res.status < 300) return true;
+	else return false;
+};
 
 export const CURRENT_USER = `
 	query CurrentUser {

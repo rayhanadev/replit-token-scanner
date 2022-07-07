@@ -22,18 +22,46 @@ for (let i = 0; i < files.length; i++) {
 		const path = files[i];
 		const file = await client.read(path, 'utf8');
 
-		const doesMatch = tokenMatchers.some((matcher) => {
-			return matcher.test(file);
+		let type = '';
+		let token = '';
+
+		const matchers = Object.values(tokenMatchers);
+		const doesMatch = matchers.some((matcher) => {
+			const test = matcher.exec(file);
+			if (test !== null) {
+				type = Object.keys(tokenMatchers).find(
+					(key) => tokenMatchers[key] === matcher,
+				);
+				token = test[0];
+
+				return true;
+			}
+			return false;
 		});
 
-		if (doesMatch) return true;
-		else return true;
+		if (doesMatch) return { type, token };
+		else return false;
 	};
 
 	completion.push(testPromise());
 }
 
 const checkedFiles = await Promise.all(completion);
-if (checkedFiles.includes(false)) process.exit(1);
+
+const uniqueTokens = [];
+const tokens = checkedFiles.filter((file) => {
+	if (file === false) return false;
+
+	if (file.token && !uniqueTokens.includes(file.token)) {
+		uniqueTokens.push(file.token);
+		return true;
+	}
+
+	return false;
+});
+
+if (tokens.length > 0) {
+	tokens.forEach((info) => process.send(JSON.stringify(info)));
+}
 
 process.exit(0);

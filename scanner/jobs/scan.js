@@ -3,16 +3,16 @@ import { spawn } from 'node:child_process';
 import chalk from 'chalk';
 import boxen from 'boxen';
 
-import GraphQL from '../utils.js';
+import GraphQL, { disableToken } from '../utils.js';
 
 const TASK_START_TIME = new Date();
-const { REPLIT_TOKEN, } = process.env;
+const { REPLIT_TOKEN, SCANNER_COUNT_OVERRIDE } = process.env;
 const gql = new GraphQL(REPLIT_TOKEN);
 
 const { replPosts } = await gql.request('RECENTLY_PUBLISHED_REPLS', {
 	options: {
 		order: 'New',
-		count: 10,
+		count: SCANNER_COUNT_OVERRIDE || 10,
 	},
 });
 
@@ -28,30 +28,34 @@ for (let i = 0; i < items.length; i++) {
 		const START_TIME = new Date();
 
 		// TODO: sanitize the value
-		const node = spawn('node', [
-			'scanner/check.js',
-			`--REPLIT_ID=${repl.id}`,
-		]);
+		const node = spawn(
+			'node',
+			['scanner/check.js', `--REPLIT_ID=${repl.id}`],
+			{ stdio: ['inherit', 'inherit', 'inherit', 'ipc'] },
+		);
 
-		node.stdout.on('data', (data) => {
-			const message = Buffer.from(data).toString('utf8');
-			console.log(message);
+		let tokens = [];
+
+		node.on('message', (data) => {
+			let info = {};
+			try {
+				info = JSON.parse(data);
+			} catch {
+				return;
+			}
+
+			if (info.type && info.token) tokens.push(info);
 		});
 
-		node.stderr.on('data', (data) => {
-			const message = Buffer.from(data).toString('utf8');
-			console.log(message);
-		});
-
-		node.on('close', (code) => {
+		node.on('close', () => {
 			const END_TIME = new Date();
 			const elapsed = Math.abs(
 				(END_TIME.getTime() - START_TIME.getTime()) / 1000,
 			);
 
-			const data = { elapsed, ...repl };
+			const data = { elapsed, tokens, repl };
 
-			if (code === 0) res({ pass: true, ...data });
+			if (tokens.length === 0) res({ pass: true, ...data });
 			else res({ pass: false, ...data });
 		});
 	});
@@ -60,7 +64,9 @@ for (let i = 0; i < items.length; i++) {
 }
 
 await Promise.all(completion);
-completion.forEach(({ pass, title, url, elapsed }) =>
+completion.forEach(({ pass, elapsed, tokens, repl }) => {
+	if (!pass) tokens.forEach((token) => disableToken(token, repl));
+
 	console.log(
 		boxen(
 			[
@@ -69,17 +75,19 @@ completion.forEach(({ pass, title, url, elapsed }) =>
 						? chalk`{reset.bold.green Does not have}`
 						: chalk`{reset.bold.red Has}`
 				} exposed secrets.`,
-				`https://replit.com${url}`,
+				`https://replit.com${repl.url.substring(0, 30)}${
+					repl.url.length > 30 ? '...' : ''
+				}`,
 				`Completed in ${elapsed} seconds.`,
 			].join('\n'),
 			{
 				padding: 1,
-				title: title,
+				title: repl.title,
 				titleAlignment: 'center',
 			},
 		),
-	),
-);
+	);
+});
 
 const TASK_END_TIME = new Date();
 const totalElapsed = Math.abs(
