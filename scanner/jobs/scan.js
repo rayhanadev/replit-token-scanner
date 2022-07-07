@@ -3,30 +3,20 @@ import { spawn } from 'node:child_process';
 import chalk from 'chalk';
 import boxen from 'boxen';
 
-import Conf from 'conf';
-
 import GraphQL from '../utils.js';
 
 const TASK_START_TIME = new Date();
-const { REPLIT_TOKEN, SCANNER_RESET } = process.env;
+const { REPLIT_TOKEN, } = process.env;
 const gql = new GraphQL(REPLIT_TOKEN);
-const config = new Conf();
-
-const after = SCANNER_RESET ? '' : config.get('after') || '';
 
 const { replPosts } = await gql.request('RECENTLY_PUBLISHED_REPLS', {
 	options: {
-		after,
 		order: 'New',
 		count: 10,
 	},
 });
 
-const { items, pageInfo } = replPosts;
-
-if (pageInfo.nextCursor) {
-	config.set('after', pageInfo.nextCursor);
-}
+const { items } = replPosts;
 
 const completion = [];
 

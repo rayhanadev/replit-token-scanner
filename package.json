@@ -18,7 +18,6 @@
 		"boxen": "^7.0.0",
 		"bree": "^9.1.1",
 		"cabin": "^9.1.2",
-		"conf": "^10.1.2",
 		"crosis4furrets": "^1.1.0",
 		"lightfetch-node": "^1.1.1",
 		"minimist": "^1.2.6"
