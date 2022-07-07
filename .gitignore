@@ -134,3 +134,5 @@ yarn-error.log
 .upm
 .config
 .cache
+
+scanner-error.logs

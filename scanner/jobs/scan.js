@@ -3,7 +3,7 @@ import { spawn } from 'node:child_process';
 import chalk from 'chalk';
 import boxen from 'boxen';
 
-import GraphQL, { disableToken } from '../utils.js';
+import GraphQL, { disableToken, errorLog } from '../utils.js';
 
 const TASK_START_TIME = new Date();
 const { REPLIT_TOKEN, SCANNER_COUNT_OVERRIDE } = process.env;
@@ -65,7 +65,9 @@ for (let i = 0; i < items.length; i++) {
 
 await Promise.all(completion);
 completion.forEach(({ pass, elapsed, tokens, repl }) => {
-	if (!pass) tokens.forEach((token) => disableToken(token, repl));
+	try {
+		if (!pass) tokens.forEach((token) => disableToken(token, repl));
+	} catch(error) { errorLog(error); };
 
 	console.log(
 		boxen(

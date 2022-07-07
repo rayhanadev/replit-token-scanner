@@ -1,7 +1,7 @@
 import minimist from 'minimist';
 import { Crosis } from 'crosis4furrets';
 
-import { ignore, tokenMatchers } from './utils.js';
+import { ignore, tokenMatchers, errorLog } from './utils.js';
 
 const { REPLIT_ID } = minimist(process.argv.slice(2));
 const { REPLIT_TOKEN } = process.env;
@@ -19,28 +19,30 @@ const completion = [];
 
 for (let i = 0; i < files.length; i++) {
 	const testPromise = async () => {
-		const path = files[i];
-		const file = await client.read(path, 'utf8');
-
-		let type = '';
-		let token = '';
-
-		const matchers = Object.values(tokenMatchers);
-		const doesMatch = matchers.some((matcher) => {
-			const test = matcher.exec(file);
-			if (test !== null) {
-				type = Object.keys(tokenMatchers).find(
-					(key) => tokenMatchers[key] === matcher,
-				);
-				token = test[0];
-
-				return true;
-			}
-			return false;
-		});
-
-		if (doesMatch) return { type, token };
-		else return false;
+		try {		
+			const path = files[i];
+			const file = await client.read(path, 'utf8');
+	
+			let type = '';
+			let token = '';
+	
+			const matchers = Object.values(tokenMatchers);
+			const doesMatch = matchers.some((matcher) => {
+				const test = matcher.exec(file);
+				if (test !== null) {
+					type = Object.keys(tokenMatchers).find(
+						(key) => tokenMatchers[key] === matcher,
+					);
+					token = test[0];
+	
+					return true;
+				}
+				return false;
+			});
+	
+			if (doesMatch) return { type, token };
+			else return false;
+		} catch(error) { errorLog(error); };
 	};
 
 	completion.push(testPromise());
