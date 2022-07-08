@@ -25,41 +25,43 @@ for (let i = 0; i < items.length; i++) {
 	const { repl } = items[i];
 	if (!repl) continue;
 
-	const childPromise = await pTimeout(new Promise((res) => {
-		const START_TIME = new Date();
+	const childPromise = await pTimeout(
+		new Promise((res) => {
+			const START_TIME = new Date();
 
-		// TODO: sanitize the value
-		const node = spawn(
-			'node',
-			['scanner/check.js', `--REPLIT_ID=${repl.id}`],
-			{ stdio: ['inherit', 'inherit', 'inherit', 'ipc'] },
-		);
-
-		let tokens = [];
-
-		node.on('message', (data) => {
-			let info = {};
-			try {
-				info = JSON.parse(data);
-			} catch {
-				return;
-			}
-
-			if (info.type && info.token) tokens.push(info);
-		});
-
-		node.on('close', () => {
-			const END_TIME = new Date();
-			const elapsed = Math.abs(
-				(END_TIME.getTime() - START_TIME.getTime()) / 1000,
+			const node = spawn(
+				'node',
+				['scanner/check.js', `--REPLIT_ID=${repl.id}`],
+				{ stdio: ['inherit', 'inherit', 'inherit', 'ipc'] },
 			);
 
-			const data = { elapsed, tokens, repl };
+			let tokens = [];
 
-			if (tokens.length === 0) res({ pass: true, ...data });
-			else res({ pass: false, ...data });
-		});
-	}), 300000);
+			node.on('message', (data) => {
+				let info = {};
+				try {
+					info = JSON.parse(data);
+				} catch {
+					return;
+				}
+
+				if (info.type && info.token) tokens.push(info);
+			});
+
+			node.on('close', () => {
+				const END_TIME = new Date();
+				const elapsed = Math.abs(
+					(END_TIME.getTime() - START_TIME.getTime()) / 1000,
+				);
+
+				const data = { elapsed, tokens, repl };
+
+				if (tokens.length === 0) res({ pass: true, ...data });
+				else res({ pass: false, ...data });
+			});
+		}),
+		300000,
+	);
 
 	completion.push(childPromise);
 }

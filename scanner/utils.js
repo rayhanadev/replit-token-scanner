@@ -69,11 +69,11 @@ export const disableToken = async (token, repl) => {
 			owner: GITHUB_OWNER,
 			repo: GITHUB_REPO,
 			path: `${atob(repl.id)}.txt`,
-			ref: 'main'
+			ref: 'main',
 		});
 	} catch (error) {
-		if(error.message !== 'Not Found') errorLog(error);
-	};
+		if (error.message !== 'Not Found') errorLog(error);
+	}
 
 	const sha = blob?.data?.sha || undefined;
 

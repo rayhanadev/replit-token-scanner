@@ -15,13 +15,13 @@ try {
 		token: REPLIT_TOKEN,
 		replId: REPLIT_ID,
 	});
-	
+
 	await client.connect();
 	files = await client.recursedir('.');
 } catch (error) {
 	errorLog(error);
 	process.exit(1);
-};
+}
 
 const completion = [];
 
