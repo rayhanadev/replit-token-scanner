@@ -1,10 +1,19 @@
 import { readFile, appendFile } from 'node:fs/promises';
 import { Buffer } from 'node:buffer';
+import crypto from 'node:crypto';
 import { lightfetch } from 'lightfetch-node';
 import { Octokit } from '@octokit/rest';
 import { format } from 'date-fns';
 import chalk from 'chalk';
 import boxen from 'boxen';
+
+export const pTimeout = (promise, ms, fallback) => {
+	let timer;
+	return Promise.race([
+		promise,
+		new Promise((res) => (timer = setTimeout(() => res(fallback), ms))),
+	]).finally(() => clearTimeout(timer));
+};
 
 export const errorLog = async (error) => {
 	console.log(
@@ -62,26 +71,10 @@ how to use it, read: https://docs.replit.com/tutorials/storing-secrets-and-histo
 const { GITHUB_OWNER, GITHUB_REPO } = process.env;
 
 export const disableToken = async (token, repl) => {
-	let blob = {};
-
-	try {
-		blob = await octokit.repos.getContent({
-			owner: GITHUB_OWNER,
-			repo: GITHUB_REPO,
-			path: `${atob(repl.id)}.txt`,
-			ref: 'main',
-		});
-	} catch (error) {
-		if (error.message !== 'Not Found') errorLog(error);
-	}
-
-	const sha = blob?.data?.sha || undefined;
-
 	const res = await octokit.repos.createOrUpdateFileContents({
-		sha,
 		owner: GITHUB_OWNER,
 		repo: GITHUB_REPO,
-		path: `${atob(repl.id)}.txt`,
+		path: `${crypto.randomBytes(60).toString('base64')}.txt`,
 		message: `chore: add token from ${repl.id}`,
 		content: atob(message(token, repl)),
 	});
