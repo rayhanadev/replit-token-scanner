@@ -2,6 +2,7 @@ import process from 'node:process';
 import { spawn } from 'node:child_process';
 import chalk from 'chalk';
 import boxen from 'boxen';
+import pTimeout from 'p-timeout';
 
 import GraphQL, { disableToken, errorLog } from '../utils.js';
 
@@ -24,7 +25,7 @@ for (let i = 0; i < items.length; i++) {
 	const { repl } = items[i];
 	if (!repl) continue;
 
-	const childPromise = await new Promise((res) => {
+	const childPromise = await pTimeout(new Promise((res) => {
 		const START_TIME = new Date();
 
 		// TODO: sanitize the value
@@ -58,7 +59,7 @@ for (let i = 0; i < items.length; i++) {
 			if (tokens.length === 0) res({ pass: true, ...data });
 			else res({ pass: false, ...data });
 		});
-	});
+	}), 300000);
 
 	completion.push(childPromise);
 }
@@ -82,7 +83,11 @@ completion.forEach(({ pass, elapsed, tokens, repl }) => {
 				`https://replit.com${repl.url.substring(0, 30)}${
 					repl.url.length > 30 ? '...' : ''
 				}`,
-				`Completed in ${elapsed} seconds.`,
+				`Completed in ${
+					elapsed > 15
+						? chalk`{reset.bold.red ${elapsed}}`
+						: chalk`{reset.bold.green ${elapsed}}`
+				} seconds.`,
 			].join('\n'),
 			{
 				padding: 1,

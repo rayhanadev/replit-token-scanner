@@ -6,14 +6,22 @@ import { ignore, tokenMatchers, errorLog } from './utils.js';
 const { REPLIT_ID } = minimist(process.argv.slice(2));
 const { REPLIT_TOKEN } = process.env;
 
-const client = new Crosis({
-	ignore,
-	token: REPLIT_TOKEN,
-	replId: REPLIT_ID,
-});
+let client;
+let files = [];
 
-await client.connect();
-const files = await client.recursedir('.');
+try {
+	client = new Crosis({
+		ignore,
+		token: REPLIT_TOKEN,
+		replId: REPLIT_ID,
+	});
+	
+	await client.connect();
+	files = await client.recursedir('.');
+} catch (error) {
+	errorLog(error);
+	process.exit(1);
+};
 
 const completion = [];
 
@@ -40,7 +48,7 @@ for (let i = 0; i < files.length; i++) {
 				return false;
 			});
 
-			if (doesMatch) return { type, token };
+			if (doesMatch) return { type, path, token };
 			else return false;
 		} catch (error) {
 			errorLog(error);
