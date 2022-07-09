@@ -46,11 +46,16 @@ export const ignore = await readFile(
 );
 
 export const tokenMatchers = {
-	'Discord Bot Token': /[M-Z][A-Za-z\d]{23}\.[\w-]{6}\.[\w-]{27}/g,
+	// TODO: Determine if the following key can
+	// be specified in any way (matches too many
+	// false positives).
+	// 'Datadog API Key': /[a-f0-9]{32}/g,
+	'Discord Bot Token': /(?:N|M|O)[a-zA-Z0-9]{23}\\.[a-zA-Z0-9-_]{6}\\.[a-zA-Z0-9-_]{27}/g,
+	'Dynatrace Token': /dt0[a-zA-Z]{1}[0-9]{2}\\.[A-Z0-9]{24}\\.[A-Z0-9]{64}/gi,
 	// TODO: Determine if the following two keys
 	// Need to appear together to be invalidated.
 	// 'AWS Access Token': /(A3T[A-Z0-9]|AKIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}/g,
-	// 'AWS Secret Key': /(?i)aws(.{0,20})?(?-i)['\"][0-9a-zA-Z\/+]{40}['\"]/g,
+	// 'AWS Secret Key': /aws(.{0,20})?(?-i)['\"][0-9a-zA-Z\/+]{40}['\"]/gi,
 	'Facebook Access Token': /EAACEdEose0cBA[0-9A-Za-z]+/g,
 	'Google API Key': /AIza[0-9A-Za-z\\-_]{35}/g,
 	'Google Cloud Platform API Key': /(google|gcp|youtube|drive|yt)(.{0,20})?['\"][AIza[0-9a-z\\-_]{35}]['\"]/gi,
@@ -60,7 +65,10 @@ export const tokenMatchers = {
 	'Github App Refresh Token': /ghr_[0-9a-zA-Z]{76}/g,
 	'Mailgun API Key': /key-[0-9a-zA-Z]{32}/g,
 	'Mailchimp API Key': /[0-9a-f]{32}-us[0-9]{1,2}/g,
+	'npm Access Token': /npm_[0-9a-zA-Z]{36}/g,
 	'NuGet API Key': /oy2[a-z0-9]{43}/g,
+	'PyPI API Token': /pypi-AgEIcHlwaS5vcmc[A-Za-z0-9-_]{50,1000}/g,
+	'SendGrid API Key': /SG\\.[0-9A-Za-z\\-_]{22}\\.[0-9A-Za-z-_]{43}/g,
 	'Shopify App Shared Secret': /shpss_[a-fA-F0-9]{32}/g,
 	'Shopify Access Token': /shpat_[a-fA-F0-9]{32}/g,
 	'Shopify Custom App Access Token': /shpca_[a-fA-F0-9]{32}/g,
@@ -70,6 +78,10 @@ export const tokenMatchers = {
 	'Slack Live API Key': /(?:r|s)k_live_[0-9a-zA-Z]{24}/g,
 	'Slack Test API Key': /(?:r|s)k_test_[0-9a-zA-Z]{24}/g,
 	'Twilio API Key': /SK[0-9a-fA-F]{32}/g,
+	// TODO: Determine if the following key can
+	// be specified in any way (matches too many
+	// false positives).
+	// 'Twilio Account String Identifier': /AC[a-zA-Z0-9_-]{32}/g,
 };
 
 const octokit = new Octokit({
