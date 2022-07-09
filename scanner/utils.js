@@ -46,7 +46,20 @@ export const ignore = await readFile(
 );
 
 export const tokenMatchers = {
-	Discord: /[M-Z][A-Za-z\d]{23}\.[\w-]{6}\.[\w-]{27}/g,
+	'Discord Bot Token': /[M-Z][A-Za-z\d]{23}\.[\w-]{6}\.[\w-]{27}/g,
+	// TODO: Determine if the following two keys
+	// Need to appear together to be invalidated.
+	// 'AWS Access Token': /(A3T[A-Z0-9]|AKIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}/g,
+	// 'AWS Secret Key': /(?i)aws(.{0,20})?(?-i)['\"][0-9a-zA-Z\/+]{40}['\"]/g,
+	'Google API Key': /AIza[0-9A-Za-z\\-_]{35}/g,
+	'Google Cloud Platform API Key': /(google|gcp|youtube|drive|yt)(.{0,20})?['\"][AIza[0-9a-z\\-_]{35}]['\"]/gi,
+	'Mailgun API Key': /key-[0-9a-zA-Z]{32}/g,
+	'Mailchimp API Key': /[0-9a-f]{32}-us[0-9]{1,2}/g,
+	'Slack API Token': /xox[baprs]-([0-9a-zA-Z]{10,48})?/g,
+	'Slack Webhook': /https:\/\/hooks.slack.com\/services\/T[a-zA-Z0-9_]{10}\/B[a-zA-Z0-9_]{10}\/[a-zA-Z0-9_]{24}/g,
+	'Slack Live API Key': /(?:r|s)k_live_[0-9a-zA-Z]{24}/g,
+	'Slack Test API Key': /(?:r|s)k_test_[0-9a-zA-Z]{24}/g,
+	'Twilio API Key': /SK[0-9a-fA-F]{32}/g,
 };
 
 const octokit = new Octokit({
@@ -62,7 +75,7 @@ Location: https://replit.com${repl.url}#${token.path.slice(2)}
 Type: ${token.type}
 Token: ${token.token}
 
-Your token has been revoked at ${token.type} because Github scans these
+Your token has been revoked at ${token.type.split(' ')[0]} because Github scans these
 repositories for secrets.
 
 Please keep your token safe! You can do this by using Replit's secrets tab. To learn
