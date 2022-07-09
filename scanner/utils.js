@@ -1,4 +1,5 @@
-import { readFile, appendFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
+import { appendFileSync } from 'node:fs';
 import { Buffer } from 'node:buffer';
 import crypto from 'node:crypto';
 import { lightfetch } from 'lightfetch-node';
@@ -29,7 +30,7 @@ export const errorLog = async (error) => {
 		),
 	);
 
-	await appendFile(
+	appendFileSync(
 		process.cwd() + '/scanner-error.logs',
 		`
 ${format(new Date(), "MM/dd/yy 'at' h':'m':'s 'UTC-0'")}
@@ -74,13 +75,13 @@ export const disableToken = async (token, repl) => {
 	const res = await octokit.repos.createOrUpdateFileContents({
 		owner: GITHUB_OWNER,
 		repo: GITHUB_REPO,
-		path: `${crypto
+		path: `tokens/${crypto
 			.randomBytes(60)
 			.toString('base64')
 			.replace(/\//g, '_')
 			.replace(/\+/g, '-')
 			.replace(/=/g, '')}.txt`,
-		message: `chore: add token from ${repl.id}`,
+		message: `chore(tokens): add from ${repl.id}`,
 		content: atob(message(token, repl)),
 	});
 

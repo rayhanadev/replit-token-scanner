@@ -27,8 +27,8 @@ const completion = [];
 
 for (let i = 0; i < files.length; i++) {
 	const testPromise = async () => {
+		const path = files[i];
 		try {
-			const path = files[i];
 			const file = await client.read(path, 'utf8');
 
 			let type = '';
@@ -51,7 +51,8 @@ for (let i = 0; i < files.length; i++) {
 			if (doesMatch) return { type, path, token };
 			else return false;
 		} catch (error) {
-			errorLog(error);
+			const modifiedError = { ...error, stack: `ReplID: ${REPLIT_ID}\nPath: ${path}\n${error.stack || ''}}`}
+			errorLog(modifiedError);
 		}
 	};
 
@@ -62,7 +63,7 @@ const checkedFiles = await Promise.all(completion);
 
 const uniqueTokens = [];
 const tokens = checkedFiles.filter((file) => {
-	if (file === false) return false;
+	if (file && file === false) return false;
 
 	if (file.token && !uniqueTokens.includes(file.token)) {
 		uniqueTokens.push(file.token);
