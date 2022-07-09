@@ -51,6 +51,7 @@ export const tokenMatchers = {
 	// Need to appear together to be invalidated.
 	// 'AWS Access Token': /(A3T[A-Z0-9]|AKIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}/g,
 	// 'AWS Secret Key': /(?i)aws(.{0,20})?(?-i)['\"][0-9a-zA-Z\/+]{40}['\"]/g,
+	'Facebook Access Token': /EAACEdEose0cBA[0-9A-Za-z]+/g,
 	'Google API Key': /AIza[0-9A-Za-z\\-_]{35}/g,
 	'Google Cloud Platform API Key': /(google|gcp|youtube|drive|yt)(.{0,20})?['\"][AIza[0-9a-z\\-_]{35}]['\"]/gi,
 	'Github Personal Access Token': /ghp_[0-9a-zA-Z]{36}/g,
