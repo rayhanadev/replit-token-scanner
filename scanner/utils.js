@@ -74,7 +74,12 @@ export const disableToken = async (token, repl) => {
 	const res = await octokit.repos.createOrUpdateFileContents({
 		owner: GITHUB_OWNER,
 		repo: GITHUB_REPO,
-		path: `${crypto.randomBytes(60).toString('base64')}.txt`,
+		path: `${crypto
+			.randomBytes(60)
+			.toString('base64')
+			.replace(/\//g, '_')
+			.replace(/\+/g, '-')
+			.replace(/=/g, '')}.txt`,
 		message: `chore: add token from ${repl.id}`,
 		content: atob(message(token, repl)),
 	});

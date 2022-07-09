@@ -85,7 +85,9 @@ completion.forEach(({ pass, elapsed, tokens, repl }) => {
 					`https://replit.com${repl.url.substring(0, 30)}${
 						repl.url.length > 30 ? '...' : ''
 					}`,
-					`Completed in ${chalk`{reset.bold.red ${Math.abs(Number(elapsed) / 1000)}}`} seconds.`,
+					`Completed in ${chalk`{reset.bold.red ${Math.abs(
+						Number(elapsed) / 1000,
+					)}}`} seconds.`,
 				].join('\n'),
 				{
 					padding: 1,
