@@ -14,9 +14,9 @@ child process which creates clients that connect to each of these Repls via [cro
 (an abstraction of [@replit/crosis](https://github.com/replit/crosis)).
 
 Upon connection, the clients create a recursed directory (filtering out common directories such
-as packages) and then reads every file. The files are matched to regexs that find exposed
-secrets and tokens. The child process then communicates any Repls with tokens to the task
-which then posts the tokens to the [dump repository](https://github.com/rayhanadev/Replit-Token-Dump)
+as packages) and then reads every file. The files are [matched to regexs](https://github.com/l4yton/RegHex#github)
+that find exposed secrets and tokens. The child process then communicates any Repls with tokens
+to the task which then posts the tokens to the [dump repository](https://github.com/rayhanadev/Replit-Token-Dump)
 from where Github handles invalidating tokens with their [Token Scanning Partners](https://github.blog/2019-08-19-github-token-scanning-one-billion-tokens-identified-and-five-new-partners/).
 
 Although not recommended, you can create your own token scanning instance by cloning this
