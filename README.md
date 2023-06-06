@@ -1,3 +1,5 @@
+> :warning: This repository has been archived! We've integrated this tool into our larger scale projects :D
+
 ![](https://edge.furret.codes/f/replit-token-scanner.png)
 
 # Replit Token Scanner
